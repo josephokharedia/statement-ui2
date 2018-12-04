@@ -1,0 +1,88 @@
+<mat-drawer-container>
+  <mat-drawer #drawer
+              [mode]="device.isTablet? 'over':'side'"
+              [opened]="!device.isTablet && !device.isHandset" position="end"
+              class="mat-elevation-z1">
+    <app-filter (startDate)="setStartDate($event)" (endDate)="setEndDate($event)"
+                (categories)="setCategories($event)"></app-filter>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <header>
+      <mat-toolbar color="white">
+        <mat-form-field color="primary">
+          <mat-label>{{'transactions.search' | translate}}</mat-label>
+          <input matInput [placeholder]="'transactions.searchByDescription' | translate" #filter type="search">
+        </mat-form-field>
+        <button *ngIf="device.isTablet" mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>tune</mat-icon>
+        </button>
+      </mat-toolbar>
+    </header>
+
+    <main>
+      <table mat-table [dataSource]="dataSource" class="transactions_table mat-elevation-z0"
+             matSort matSortActive="date" matSortDirection="asc" matSortDisableClear>
+
+        <!--  Date Column -->
+        <ng-container matColumnDef="date" sticky>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'transactions.date' | translate}}</th>
+          <td mat-cell *matCellDef="let tx">{{tx.date | date:'yyyy-MM-dd'}}</td>
+        </ng-container>
+
+        <!-- Description Column -->
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'transactions.description' | translate}}</th>
+          <td mat-cell *matCellDef="let tx">
+            <div class="transactions_tableCellDescription">{{tx.description}}</div>
+            <div class="transactions_table_cellTags">
+              <span [class]="normalizeStr(tx.statement.institution)">{{tx.statement.institution}}</span>
+              <span *ngFor="let category of tx.categories; trackBy:trackByCategory">{{category}}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+          <td mat-cell *matCellDef="let tx">{{tx.amount}}</td>
+        </ng-container>
+
+        <!-- Balance Column -->
+        <ng-container matColumnDef="balance">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Balance</th>
+          <td mat-cell *matCellDef="let tx">{{tx.balance}}</td>
+        </ng-container>
+
+        <!-- Star Column -->
+        <ng-container matColumnDef="star" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let tx">
+            <mat-icon>more_vert</mat-icon>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <section class="transactions_noResultsFound" *ngIf="(dataSource.transactionSize$ | async) == 0">
+        <h3 matSubheader>No Results Found</h3>
+      </section>
+    </main>
+
+    <footer>
+      <mat-paginator [length]="(dataSource.transactionSize$ | async)"
+                     [pageSize]="25" [showFirstLastButtons]="true"
+                     [pageSizeOptions]="[25, 50, 100]">
+      </mat-paginator>
+    </footer>
+
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<ng-container *ngIf="device.isHandset">
+  <button mat-fab class="transactions_filterButton" (click)="openFilterDialog()">
+    <mat-icon>tune</mat-icon>
+  </button>
+</ng-container>
+

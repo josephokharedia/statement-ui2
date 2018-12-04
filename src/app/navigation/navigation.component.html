@@ -1,0 +1,29 @@
+<mat-sidenav Web #sidenav [opened]="opened" [mode]="mode"
+  class="mat-elevation-z2">
+  <mat-toolbar>
+    <mat-icon mat-list-icon>donut_large</mat-icon>
+    <span class="title">{{title}}</span>
+  </mat-toolbar>
+  <ng-container *ngTemplateOutlet="menu; context: navListContext"></ng-container>
+</mat-sidenav>
+
+
+<ng-template #menu>
+  <mat-nav-list>
+    <!--<h3 mat-subheader>Action</h3>-->
+    <a routerLink="/dashboard" routerLinkActive="active">
+      <mat-list-item>
+        <mat-icon mat-list-icon>dashboard</mat-icon>
+        <h4 mat-line>Dashboard</h4>
+        <!--<mat-hint mat-line>Dashboard</mat-hint>-->
+      </mat-list-item>
+    </a>
+  </mat-nav-list>
+</ng-template>
+
+<!--
+  State:
+    - FIXED_ON_THE_SIDE
+    - TOGGLE_WITH_HAMBURGER
+    - FIXED_ICONS_ON_THE_SIDE
+-->

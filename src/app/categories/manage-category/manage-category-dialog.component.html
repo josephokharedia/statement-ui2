@@ -1,0 +1,59 @@
+<header>
+  <button *ngIf="device.isHandset" mat-icon-button (click)="cancel()">
+    <mat-icon>expand_more</mat-icon>
+  </button>
+  <h1 mat-dialog-title>{{action}} {{'categories.manageCategory.category' | translate}}</h1>
+</header>
+<main>
+  <ng-container *ngIf="action !== ActionType.DELETE " [ngTemplateOutlet]="addOrEditDialog"></ng-container>
+  <ng-container *ngIf="action === ActionType.DELETE " [ngTemplateOutlet]="deleteDialog"></ng-container>
+</main>
+
+
+<ng-template #addOrEditDialog>
+  <div mat-dialog-content [formGroup]="categoryForm">
+    <mat-form-field>
+      <mat-label>{{'categories.manageCategory.name' | translate}}</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-chip-list #chipList formControlName="tags" required>
+        <mat-chip *ngFor="let tag of category.tags" [selectable]="true"
+                  (removed)="removeTagFromCategory(tag)" [removable]="true">
+          {{tag}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input matInput #tagInput
+               [placeholder]="'categories.manageCategory.tags' | translate"
+               [matAutocomplete]="auto"
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="false"
+               (matChipInputTokenEnd)="addTagToCategory($event)">
+      </mat-chip-list>
+      <mat-hint>{{'categories.manageCategory.typeTheTags' | translate}}</mat-hint>
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option (onSelectionChange)="addTagToCategory(suggestion)" *ngFor="let suggestion of suggestions$ | async"
+                    [value]="suggestion">
+          {{suggestion}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</ng-template>
+
+<ng-template #deleteDialog>
+  <mat-dialog-content class="mat-typography">
+    {{'categories.manageCategory.areYouSure' | translate}} "{{category.name}}"
+  </mat-dialog-content>
+</ng-template>
+
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">{{'categories.manageCategory.cancel' | translate | uppercase}}</button>
+  <button mat-button color="primary" (click)="submit(category)" [disabled]="!(allowSubmit$ | async)">
+    {{action === ActionType.DELETE ?
+    ('categories.manageCategory.delete' | translate | uppercase)
+    : ('categories.manageCategory.submit' | translate | uppercase)}}
+  </button>
+</div>

@@ -1,0 +1,6 @@
+.graph-container {
+  /*width: 40em;*/
+  /*padding: 1em;*/
+  flex-basis: 40%;
+  padding: 0 1em 1em 1em;
+}

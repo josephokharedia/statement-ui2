@@ -1,0 +1,28 @@
+.statements_uploadStatement_chooseInstitution {
+  display: flex;
+}
+
+.statements_uploadStatement_dragAndDrop {
+  display: flex;
+  border: dashed 1px gray;
+  padding: 10px 100px;
+  margin: 10px 0;
+  place-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.createStatementDialog_chosenFile {
+  display: flex;
+  width: 100%;
+  margin-top: 24px;
+
+  span {
+    padding: 0 8px;
+    flex: 1 1 auto;
+  }
+
+  button {
+    margin-top: -8px;
+  }
+}

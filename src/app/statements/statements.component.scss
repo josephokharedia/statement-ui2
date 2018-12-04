@@ -1,0 +1,51 @@
+mat-drawer {
+  width: 35em;
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  place-content: space-between;
+
+  & mat-form-field, & mat-select {
+    font-size: 14px;
+  }
+}
+
+mat-nav-list {
+  padding: 0;
+  background-color: #fff;
+  height: 100vh;
+  overflow: auto;
+
+  mat-list-item.selected {
+    background-color: rgba(98, 0, 238, 0.12);
+    //box-sizing: border-box;
+    //-moz-box-sizing: border-box;
+    //-webkit-box-sizing: border-box;
+    //border-left: #673ab7 solid 4px;
+    //padding-left: 0;
+  }
+
+  .mat-line {
+    padding-top: 2px;
+    display: flex;
+    flex-direction: row;
+
+    & > * {
+      margin-right: 8px;
+    }
+  }
+}
+
+.statements_addStatement_button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1;
+}

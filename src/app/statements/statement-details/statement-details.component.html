@@ -1,0 +1,99 @@
+<section class="statements_statementDetails_container" appDeviceClass *ngIf="statementDetails">
+  <header>
+    <div class="mat-title">
+      <button *ngIf="device.isHandset" mat-icon-button (click)="dismiss()">
+        <mat-icon>expand_more</mat-icon>
+      </button>
+      <span>{{'statements.statementDetails.statementDetails' | translate | uppercase}}</span>
+    </div>
+    <mat-divider></mat-divider>
+  </header>
+
+  <section>
+    <div class="mat-headline">{{statementDetails.accountDescription | uppercase}}
+      <br/>
+      <mat-hint>{{statementDetails.accountNumber}}</mat-hint>
+    </div>
+    <mat-divider></mat-divider>
+  </section>
+
+
+  <section class="statements_statementDetails_info" appDeviceClass>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.startDate' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.fromDate | date:'dd MMM yy'}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.endDate' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.toDate | date:'dd MMM yy'}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.institution' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.institution}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.totalTrans' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.transactions.data.length}}</b></span>
+    </article>
+
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.openingBalance' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.openingBalance | currency:'ZAR':'symbol-narrow':'2.2-4'}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.closingBalance' | translate}}</span>
+      <span class="mat-subheading-2"><b>{{statementDetails.closingBalance | currency:'ZAR':'symbol-narrow':'2.2-4'}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.totalCredit' | translate}}</span>
+      <span
+        class="mat-subheading-2"><b>{{statementDetails.totalCredit | currency:'ZAR':'symbol-narrow':'2.2-4'}}</b></span>
+    </article>
+    <article>
+      <span class="mat-subheading-2">{{'statements.statementDetails.totalDebit' | translate}}</span>
+      <span
+        class="mat-subheading-2"><b>{{statementDetails.totalDebit | currency:'ZAR':'symbol-narrow':'2.2-4'}}</b></span>
+    </article>
+  </section>
+
+  <section>
+    <mat-tab-group>
+      <mat-tab [label]="'statements.statementDetails.debits' | translate">
+        <ng-template matTabContent>
+          <canvas baseChart width="400" height="220"
+                  [datasets]="debitChartData"
+                  [labels]="debitChartLabels"
+                  [options]="debitChartOptions"
+                  [colors]="debitChartColors"
+                  [legend]="true"
+                  [chartType]="'line'">
+          </canvas>
+        </ng-template>
+      </mat-tab>
+      <mat-tab [label]="'statements.statementDetails.credits' | translate">
+        <ng-template matTabContent>
+          <canvas baseChart width="400" height="220"
+                  [datasets]="creditChartData"
+                  [labels]="creditChartLabels"
+                  [options]="creditChartOptions"
+                  [colors]="creditChartColors"
+                  [legend]="true"
+                  [chartType]="'line'">
+          </canvas>
+        </ng-template>
+      </mat-tab>
+      <mat-tab [label]="'statements.statementDetails.categories' | translate">
+        <ng-template matTabContent>
+          <canvas baseChart width="400" height="220"
+                  [datasets]="categoriesChartData"
+                  [labels]="categoriesChartLabels"
+                  [options]="categoriesChartOptions"
+                  [colors]="categoriesChartColors"
+                  [legend]="true"
+                  [chartType]="'radar'">
+          </canvas>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </section>
+</section>

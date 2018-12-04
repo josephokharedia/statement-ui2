@@ -1,0 +1,56 @@
+<mat-drawer-container>
+  <mat-drawer *ngIf="!device.isHandset" #drawer [mode]="device.isTablet? 'over':'side'"
+              [opened]="!device.isTablet" position="end"
+              class="mat-elevation-z1">
+    <app-statement-details *ngIf="selectedStatement" [statement]="selectedStatement"></app-statement-details>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <mat-toolbar>
+      <mat-form-field>
+        <mat-select [placeholder]="'statements.year' | translate"
+                    (selectionChange)="filterStatementsByYear()"
+                    [(ngModel)]="selectedYear">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{year}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button *ngIf="!device.isHandset" mat-raised-button color="primary" (click)="openUploadStatementDialog()">
+        <span>{{'statements.statement' | translate}}</span>
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+
+
+    <mat-nav-list>
+      <mat-list-item [class.selected]="statement.id === selectedStatement?.id"
+                     *ngFor="let statement of (statements$ | async)"
+                     (click)="selectStatement(statement)">
+        <mat-icon mat-list-icon>archive</mat-icon>
+        <h4 mat-line>{{statement.accountDescription}}</h4>
+        <p mat-line>{{statement.accountNumber}}</p>
+        <p mat-line>
+          <mat-hint>
+            <mat-icon [inline]="true">calendar_today</mat-icon>
+            <span>{{statement.toDate | date:'dd MMM yyyy'}}</span>
+          </mat-hint>
+          <mat-hint>
+            <mat-icon [inline]="true">calendar_today</mat-icon>
+            <span>{{statement.fromDate | date:'dd MMM yyyy'}}</span>
+          </mat-hint>
+        </p>
+        <p>
+          <mat-hint>{{statement.statementNumber}}</mat-hint>
+        </p>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+<ng-container *ngIf="device.isHandset">
+  <button mat-fab class="statements_addStatement_button" (click)="openUploadStatementDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</ng-container>

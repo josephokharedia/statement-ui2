@@ -1,0 +1,83 @@
+<section [formGroup]="filterForm" class="filter_container">
+
+  <!-- Heading -->
+  <header>
+    <button *ngIf="device.isHandset" mat-icon-button (click)="dismiss()">
+      <mat-icon>expand_more</mat-icon>
+    </button>
+    <h1 class="mat-headline">{{'transactions.filter.filter' | translate}}</h1>
+  </header>
+
+  <!-- Dates filter -->
+  <section>
+    <article>
+      <mat-form-field>
+        <input matInput [matDatepicker]="startDatePicker"
+               [placeholder]="'transactions.filter.startDate' | translate" formControlName="startDate">
+        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker disabled="false"></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput [matDatepicker]="endDatePicker"
+               [placeholder]="'transactions.filter.endDate' | translate" formControlName="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker disabled="false"></mat-datepicker>
+      </mat-form-field>
+    </article>
+  </section>
+
+  <!-- Category filter -->
+  <section *ngIf="categories$ | async as categories">
+    <mat-divider></mat-divider>
+    <header>
+      <h2 class="mat-subheading-1 mat-hint">{{'transactions.filter.categories' | translate}}</h2>
+      <button mat-button color="primary" (click)="categoryList.selectAll()"
+              *ngIf="categoryList.selectedOptions.selected.length < categories.length">
+        {{'transactions.filter.selectAll' | translate}}
+      </button>
+      <button mat-button color="primary" (click)="categoryList.deselectAll()"
+              *ngIf="categoryList.selectedOptions.selected.length == categories.length">
+        {{'transactions.filter.deselectAll' | translate}}
+      </button>
+    </header>
+
+    <article>
+      <mat-selection-list #categoryList formControlName="categories">
+        <mat-list-option *ngFor="let category of categories" [value]="category._id">
+          {{category.name}}
+        </mat-list-option>
+      </mat-selection-list>
+    </article>
+    <article>
+      <button mat-raised-button color="primary" (click)="openAddCategoryDialog()">
+        <span>{{'transactions.filter.category' | translate}}</span>
+        <mat-icon>add</mat-icon>
+      </button>
+    </article>
+  </section>
+
+
+  <!-- Institution filter -->
+  <section *ngIf="institutions$ | async as institutions">
+    <mat-divider></mat-divider>
+    <header>
+      <h2 class="mat-subheading-1 mat-hint">{{'transactions.filter.institutions' | translate}}</h2>
+      <button mat-button color="primary" (click)="institutionList.selectAll()"
+              *ngIf="institutionList.selectedOptions.selected.length < institutions.length">
+        {{'transactions.filter.selectAll' | translate}}
+      </button>
+      <button mat-button color="primary" (click)="institutionList.deselectAll()"
+              *ngIf="institutionList.selectedOptions.selected.length == institutions.length">
+        {{'transactions.filter.deselectAll' | translate}}
+      </button>
+    </header>
+    <article>
+      <mat-selection-list #institutionList formControlName="institutions">
+        <mat-list-option *ngFor="let institution of institutions" [value]="institution">
+          {{institution}}
+        </mat-list-option>
+      </mat-selection-list>
+    </article>
+  </section>
+
+</section>

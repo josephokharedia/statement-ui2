@@ -1,0 +1,68 @@
+main {
+  height: 100%;
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    mat-toolbar {
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      place-content: space-between;
+
+      //width: 100%;
+      //display: flex;
+      //place-content: space-between;
+      padding: 0 16px;
+
+      mat-form-field {
+        flex: 1 1 auto;
+        margin-right: 16px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  section {
+    display: flex;
+    flex-flow: row wrap;
+    padding: 16px;
+    overflow: auto;
+    //place-content: space-around;
+
+    mat-card {
+      width: 250px;
+      margin: 0;
+      margin-right: 16px;
+      margin-bottom: 16px;
+
+      &:first-child {
+        //margin-left: 0;
+      }
+
+      mat-card-content {
+        max-height: 70px;
+        min-height: 70px;
+        overflow: hidden;
+        mat-chip-list {
+          display: flex;
+          flex-flow: row wrap;
+        }
+      }
+
+      mat-card-actions {
+        display: flex;
+        place-content: flex-end;
+      }
+    }
+
+  }
+}
+
+.categories_addCategory_button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1;
+}

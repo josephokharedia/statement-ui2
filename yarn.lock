@@ -102,6 +102,14 @@
   dependencies:
     tslib "^1.9.0"
 
+"@angular/cdk@~7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-7.0.2.tgz#35081cd27a8f5214568b6ad1acf8cb3b3c315f99"
+  dependencies:
+    tslib "^1.7.1"
+  optionalDependencies:
+    parse5 "^5.0.0"
+
 "@angular/cli@~7.0.3":
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-7.0.3.tgz#fcc41f9eaae2ee15d86115804f3dbb2bdb63a8c2"
@@ -165,6 +173,12 @@
 "@angular/language-service@~7.0.0":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-7.0.1.tgz#86eab29a979c2efd45617a3bff4dfb490f23dcc1"
+
+"@angular/material@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-7.0.2.tgz#f64a664730dc497dbdc3dcabaf145636af90d0ea"
+  dependencies:
+    tslib "^1.7.1"
 
 "@angular/platform-browser-dynamic@~7.0.0":
   version "7.0.1"
@@ -2581,6 +2595,10 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
+hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+
 handle-thing@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
@@ -3943,6 +3961,14 @@ neo-async@^2.5.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
 
+ng2-google-charts@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/ng2-google-charts/-/ng2-google-charts-3.4.0.tgz#9e3770fbed673fea56e12b22983675c387e8d131"
+
+ngx-progressbar@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ngx-progressbar/-/ngx-progressbar-2.1.1.tgz#cecd88435ac660be445caeaded19b85f4a1e47be"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -4379,6 +4405,10 @@ parse-json@^4.0.0:
 parse5@4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-4.0.0.tgz#6d78656e3da8d78b4ec0b906f7c08ef1dfe3f608"
+
+parse5@^5.0.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-5.1.0.tgz#c59341c9723f414c452975564c7c00a68d58acd2"
 
 parseqs@0.0.5:
   version "0.0.5"
@@ -5027,6 +5057,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   resolved "https://registry.yarnpkg.com/run-queue/-/run-queue-1.0.3.tgz#e848396f057d223f24386924618e25694161ec47"
   dependencies:
     aproba "^1.1.1"
+
+rxjs-compat@^6.3.3:
+  version "6.3.3"
+  resolved "https://registry.yarnpkg.com/rxjs-compat/-/rxjs-compat-6.3.3.tgz#2ab3b9ac0dac0c073749d55fef9c03ea1df2045c"
 
 rxjs@6.3.3, rxjs@^6.1.0, rxjs@~6.3.3:
   version "6.3.3"
@@ -5864,7 +5898,7 @@ ts-node@~7.0.0:
     source-map-support "^0.5.6"
     yn "^2.0.0"
 
-tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
+tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 

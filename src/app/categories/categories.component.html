@@ -1,0 +1,41 @@
+<main>
+  <nav>
+    <mat-toolbar appDeviceClass class="my-mat-toolbar">
+      <mat-form-field>
+        <input matInput [placeholder]="'categories.search' | translate"/>
+      </mat-form-field>
+      <button *ngIf="!device.isHandset" mat-raised-button color="primary" (click)="openAddCategoryDialog()">
+        <span>{{'categories.category' | translate}}</span>
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-toolbar>
+  </nav>
+  <section>
+    <mat-card *ngFor="let category of (categories$ | async); trackBy:trackByFn">
+      <mat-card-title>
+        {{category.name}}
+        <mat-divider></mat-divider>
+      </mat-card-title>
+      <mat-card-content>
+        <mat-chip-list>
+          <mat-chip *ngFor="let tag of category.tags" [disableRipple]="true" [selectable]="false">{{tag}}</mat-chip>
+        </mat-chip-list>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-icon-button color="primary" (click)="openEditCategoryDialog(category)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button (click)="openDeleteCategoryDialog(category)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </section>
+</main>
+
+<ng-container *ngIf="device.isHandset">
+  <button mat-fab class="categories_addCategory_button" (click)="openAddCategoryDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</ng-container>
+
