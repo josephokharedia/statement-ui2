@@ -1,41 +1,55 @@
-<main>
-  <nav>
-    <mat-toolbar appDeviceClass class="my-mat-toolbar">
-      <mat-form-field>
-        <input matInput [placeholder]="'categories.search' | translate"/>
-      </mat-form-field>
-      <button *ngIf="!device.isHandset" mat-raised-button color="primary" (click)="openAddCategoryDialog()">
-        <span>{{'categories.category' | translate}}</span>
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-toolbar>
-  </nav>
-  <section>
-    <mat-card *ngFor="let category of (categories$ | async); trackBy:trackByFn">
+<app-header>
+  <mat-toolbar appDeviceClass class="mat-elevation-z1">
+    <app-sidenav-toggle></app-sidenav-toggle>
+    <span>{{'categories.categories' | translate}}</span>
+    <span class="app-fill"></span>
+    <button *ngIf="!device.isHandset" mat-raised-button color="primary" (click)="openAddCategoryDialog()">
+      <span>{{'categories.category' | translate}}</span>
+      <mat-icon>add</mat-icon>
+    </button>
+  </mat-toolbar>
+</app-header>
+<app-main [border]="false">
+  <section class="categories_content" *ngIf="categories?.length; else:noResultsFound">
+    <mat-card *ngFor="let category of categories; trackBy:trackByFn">
       <mat-card-title>
         {{category.name}}
-        <mat-divider></mat-divider>
+        <!--<mat-divider></mat-divider>-->
       </mat-card-title>
+      <mat-card-subtitle>
+        {{category.tags.length}} tag(s)
+      </mat-card-subtitle>
       <mat-card-content>
-        <mat-chip-list>
-          <mat-chip *ngFor="let tag of category.tags" [disableRipple]="true" [selectable]="false">{{tag}}</mat-chip>
-        </mat-chip-list>
+        <ul>
+          <li *ngFor="let tag of category.tags" class="mat-hint">
+            <span>{{tag}}</span>
+          </li>
+        </ul>
+        <!--<mat-chip-list>-->
+        <!--<mat-chip *ngFor="let tag of category.tags" [disableRipple]="true" [selectable]="false">{{tag}}</mat-chip>-->
+        <!--</mat-chip-list>-->
       </mat-card-content>
-      <mat-card-actions>
-        <button mat-icon-button color="primary" (click)="openEditCategoryDialog(category)">
-          <mat-icon>edit</mat-icon>
+      <mat-card-actions align="start">
+        <button mat-button color="primary" (click)="openEditCategoryDialog(category)">
+          EDIT
         </button>
-        <button mat-icon-button (click)="openDeleteCategoryDialog(category)">
-          <mat-icon>delete</mat-icon>
+        <button mat-button color="primary" (click)="openDeleteCategoryDialog(category)">
+          DELETE
         </button>
       </mat-card-actions>
     </mat-card>
   </section>
-</main>
+</app-main>
 
 <ng-container *ngIf="device.isHandset">
   <button mat-fab class="categories_addCategory_button" (click)="openAddCategoryDialog()">
     <mat-icon>add</mat-icon>
   </button>
 </ng-container>
+
+<ng-template #noResultsFound>
+  <app-no-results [title]="'categories.noResultsFoundTitle' | translate"
+                  [message]="'categories.noResultsFoundMessage' | translate">
+  </app-no-results>
+</ng-template>
 

@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatBottomSheet, MatDialog} from '@angular/material';
 import {CategoryService} from './shared/category.service';
-import {Observable, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {Category} from '../shared/shared.model';
-import {NotificationService} from '../shared/notification.service';
+import {NotificationService} from '../notification/notification.service';
 import {ManageCategoryDialogComponent} from './manage-category/manage-category-dialog.component';
-import {switchMap} from 'rxjs/operators';
+import {switchMap, takeUntil} from 'rxjs/operators';
 import {RefreshService} from '../shared/refresh.service';
 import {DeviceService} from '../shared/device.service';
 import {TranslateService} from '@ngx-translate/core';
@@ -17,8 +17,9 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
 
-  categories$: Observable<Category[]>;
+  categories: Category[] = [];
   private subscriptions: Subscription[] = [];
+  private destroy$ = new Subject<boolean>();
 
   constructor(private dialog: MatDialog, private bottomSheet: MatBottomSheet,
               private categoryService: CategoryService,
@@ -29,8 +30,11 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.categories$ = this.refreshService.refresh$
-      .pipe(switchMap(() => this.categoryService.retrieve()));
+    this.categoryService.retrieve().pipe(takeUntil(this.destroy$))
+      .subscribe(categories => this.categories = categories);
+    this.refreshService.refresh$
+      .pipe(takeUntil(this.destroy$), switchMap(() => this.categoryService.retrieve()))
+      .subscribe(categories => this.categories = categories);
   }
 
   openAddCategoryDialog() {
@@ -95,7 +99,7 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(deletingCategory => {
       if (deletingCategory) {
         this.subscriptions.push(
-          this.categoryService.delete(deletingCategory._id).subscribe(() => {
+          this.categoryService.delete(deletingCategory.id).subscribe(() => {
 
             this.subscriptions.push(
               this.translate.get('categories.manageCategory.categoryDeleted',
@@ -113,10 +117,11 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   }
 
   trackByFn(index, item) {
-    return item._id;
+    return item.id;
   }
 
   ngOnDestroy() {
+    this.destroy$.next(true);
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 

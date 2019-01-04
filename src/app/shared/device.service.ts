@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
-import {map, share} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {map, share, takeUntil} from 'rxjs/operators';
+import {Observable, Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DeviceService {
+export class DeviceService implements OnDestroy {
 
   handset$: Observable<boolean>;
   tablet$: Observable<boolean>;
@@ -16,6 +16,8 @@ export class DeviceService {
   isTablet: boolean;
   isWeb: boolean;
 
+  destroy$ = new Subject<boolean>();
+
   constructor(private breakpointObserver: BreakpointObserver) {
     this.handset$ = this.breakpointObserver.observe([Breakpoints.Handset])
       .pipe(map(result => result.matches), share());
@@ -24,8 +26,12 @@ export class DeviceService {
     this.web$ = this.breakpointObserver.observe([Breakpoints.Web])
       .pipe(map(result => result.matches), share());
 
-    this.handset$.subscribe(result => this.isHandset = result);
-    this.tablet$.subscribe(result => this.isTablet = result);
-    this.web$.subscribe(result => this.isWeb = result);
+    this.handset$.pipe(takeUntil(this.destroy$)).subscribe(result => this.isHandset = result);
+    this.tablet$.pipe(takeUntil(this.destroy$)).subscribe(result => this.isTablet = result);
+    this.web$.pipe(takeUntil(this.destroy$)).subscribe(result => this.isWeb = result);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 }

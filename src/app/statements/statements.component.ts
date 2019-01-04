@@ -1,47 +1,47 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {StatementService} from './shared/statement.service';
-import {Statement} from '../shared/shared.model';
-import {BehaviorSubject} from 'rxjs';
-import {MatBottomSheet, MatDialog, MatDrawer} from '@angular/material';
+import {StatementTo} from '../shared/shared.model';
+import {Subject} from 'rxjs';
+import {MatBottomSheet, MatDrawer} from '@angular/material';
 import {StatementDetailsComponent} from './statement-details/statement-details.component';
-import {UploadStatementDialogComponent} from './upload-statement/upload-statement-dialog.component';
 import {DeviceService} from '../shared/device.service';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-statement',
   templateUrl: './statements.component.html',
   styleUrls: ['./statements.component.scss']
 })
-export class StatementsComponent implements OnInit {
+export class StatementsComponent implements OnInit, OnDestroy {
 
-  private statementsSubject = new BehaviorSubject<Statement[]>([]);
-  statements$ = this.statementsSubject.asObservable();
-  private allStatements: Statement[] = [];
+  statements: StatementTo[] = [];
+  private allStatements: StatementTo[] = [];
+  private destroy$ = new Subject<boolean>();
 
   years: number[] = [];
   selectedYear: number;
-  selectedStatement: Statement;
+  selectedStatement: StatementTo;
 
   @ViewChild(MatDrawer)
   drawer: MatDrawer;
 
   constructor(private device: DeviceService,
               private statementService: StatementService,
-              private bottomSheet: MatBottomSheet,
-              private dialog: MatDialog) {
+              private bottomSheet: MatBottomSheet) {
   }
 
-  // TODO: Unsubscribe
   ngOnInit() {
-    this.statementService.retrieve()
+    this.retrieveStatements();
+  }
+
+  retrieveStatements(): void {
+    this.statementService.retrieve().pipe(takeUntil(this.destroy$))
       .subscribe(statements => {
-        this.statementsSubject.next(statements);
         this.years = this._getYearsFromStatements(statements);
         this.allStatements = statements;
         this.filterStatementsByYear();
       });
   }
-
 
   filterStatementsByYear() {
     if (!this.selectedYear && this.years.length) {
@@ -60,10 +60,10 @@ export class StatementsComponent implements OnInit {
       this.selectedStatement = filteredStatements[0];
     }
 
-    this.statementsSubject.next(filteredStatements);
+    this.statements = filteredStatements;
   }
 
-  private _getYearsFromStatements(statements: Statement[]): number[] {
+  private _getYearsFromStatements(statements: StatementTo[]): number[] {
     statements.sort((a, b) => new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime());
     const yearsFromStatements = new Set<number>();
     statements.forEach(statement => {
@@ -74,7 +74,7 @@ export class StatementsComponent implements OnInit {
   }
 
 
-  selectStatement(statement: Statement) {
+  selectStatement(statement: StatementTo) {
     this.selectedStatement = statement;
 
     if (this.device.isHandset) {
@@ -86,10 +86,6 @@ export class StatementsComponent implements OnInit {
     }
   }
 
-  openUploadStatementDialog() {
-    this.dialog.open(UploadStatementDialogComponent, {});
-  }
-
   private openStatementDetailsBottomSheet() {
     this.bottomSheet.open(StatementDetailsComponent, {
       data: this.selectedStatement.id,
@@ -98,5 +94,9 @@ export class StatementsComponent implements OnInit {
 
   private _openDrawer() {
     this.drawer.open();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
   }
 }

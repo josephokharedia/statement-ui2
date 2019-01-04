@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Inject, Input, OnChanges, OnDestroy, OnInit, Optional, SimpleChanges} from '@angular/core';
-import {CategoriesTotal, Statement, StatementDetails} from '../../shared/shared.model';
+import {CategoriesTotal, StatementTo, StatementDetailsTo} from '../../shared/shared.model';
 import {StatementService} from '../shared/statement.service';
 import {Subscription} from 'rxjs';
 import {CurrencyPipe} from '@angular/common';
@@ -18,8 +18,8 @@ import {DeviceService} from '../../shared/device.service';
 export class StatementDetailsComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
 
   @Input()
-  statement: Statement;
-  statementDetails: StatementDetails;
+  statement: StatementTo;
+  statementDetails: StatementDetailsTo;
   categoriesTotal: CategoriesTotal[];
   private statementSubscription: Subscription;
   private categoriesTotalSubscription: Subscription;
@@ -54,7 +54,6 @@ export class StatementDetailsComponent implements OnInit, OnChanges, OnDestroy, 
 
   ngAfterViewInit() {
     if (this.bottomSheetRef) {
-      console.log(this.bottomSheetRef);
       const statementId = this.data;
       this.statementSubscription = this.statementService.retrieveDetails(statementId)
         .subscribe(sDtls => {
@@ -96,7 +95,7 @@ export class StatementDetailsComponent implements OnInit, OnChanges, OnDestroy, 
   private plotDebitsChart() {
     const amounts = [];
     const labels = [];
-    const debits = this.statementDetails.transactions.debits.slice(0);
+    const debits = this.statementDetails.transactionGroups.debits.slice(0);
     debits.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     debits.forEach(debit => {
       const date = new Date(debit.date);
@@ -136,7 +135,7 @@ export class StatementDetailsComponent implements OnInit, OnChanges, OnDestroy, 
   private plotCreditsChart() {
     const amounts = [];
     const labels = [];
-    const credits = this.statementDetails.transactions.credits.slice(0);
+    const credits = this.statementDetails.transactionGroups.credits.slice(0);
     credits.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     credits.forEach(credit => {
       const date = new Date(credit.date);

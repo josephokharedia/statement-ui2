@@ -43,7 +43,7 @@
 
     <article>
       <mat-selection-list #categoryList formControlName="categories">
-        <mat-list-option *ngFor="let category of categories" [value]="category._id">
+        <mat-list-option *ngFor="let category of categories" [value]="category.id">
           {{category.name}}
         </mat-list-option>
       </mat-selection-list>
@@ -73,8 +73,8 @@
     </header>
     <article>
       <mat-selection-list #institutionList formControlName="institutions">
-        <mat-list-option *ngFor="let institution of institutions" [value]="institution">
-          {{institution}}
+        <mat-list-option *ngFor="let institution of institutions" [value]="institution.name">
+          {{institution.name}}
         </mat-list-option>
       </mat-selection-list>
     </article>

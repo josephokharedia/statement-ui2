@@ -1,0 +1,20 @@
+@import '~@angular/material/theming';
+
+$custom-typography: mat-typography-config(
+  $font-family: 'Roboto Condensed, Roboto, monospace'
+);
+
+$app-primary: mat-palette($mat-deep-purple);
+$app-accent: mat-palette($mat-yellow);
+$app-warn: mat-palette($mat-red);
+
+// Create your Sass color vars (will be available in all the project)
+$primary: mat-color($app-primary);
+$accent: mat-color($app-accent);
+$warn: mat-color($app-warn);
+
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+$app-theme-background: map-get($app-theme, background);
+$appbar: map-get($app-theme-background, app-bar);
+$card: map-get($app-theme-background, card);

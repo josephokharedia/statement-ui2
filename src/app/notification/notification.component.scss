@@ -1,0 +1,119 @@
+@import "~src/variables.scss";
+
+.notification_box {
+  display: flex;
+  flex-flow: row wrap;
+  white-space: normal;
+  font-size: 16px;
+  background: rgb(255, 255, 255);
+  justify-content: flex-start;
+  align-content: space-between;
+  //min-height: 52px;
+  padding: 16px 8px 8px 24px;
+  margin-top: 1px;
+  border-bottom: 3px $warn solid;
+
+  .notification_box_gutter {
+    min-height: 20px;
+    flex: 1 1 auto;
+  }
+
+  &.handsetDevice {
+    padding: 10px 8px 8px 16px;
+  }
+
+  .notification_box_message {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      margin-right: 16px;
+      align-self: baseline;
+    }
+
+    article {
+      display: flex;
+      flex-flow: column wrap;
+
+      .notification_box_message_summary {
+        padding-bottom: 16px;
+      }
+    }
+  }
+
+
+  .notification_box_actionButtons {
+    display: flex;
+    flex: 2 0 auto;
+    justify-content: flex-end;
+    padding-left: 36px;
+    align-items: flex-end;
+  }
+
+  &.desktopDevice .notification_box_actionButtons {
+    padding-left: 90px;
+  }
+}
+
+
+//mat-toolbar {
+//  display: flex;
+//  font-size: 16px;
+//  font-weight: normal;
+//  background: #fff;
+//  padding-left: 0;
+//
+//  .notifications_actionButtons {
+//    place-content: flex-end;
+//    height: auto;
+//  }
+//
+//  mat-icon {
+//    margin-right: 24px;
+//  }
+//
+//  button {
+//    margin-left: 8px;
+//  }
+//
+//  .notification_gap {
+//    flex-basis: 90px;
+//  }
+//
+//  .notification_message {
+//    flex: 1 1 auto;
+//    word-break: break-word;
+//  }
+//
+//  .notification_details {
+//    flex-direction: column;
+//    place-content: start;
+//    align-items: start;
+//  }
+//
+//  &.handsetDevice {
+//    padding: 24px 0 8px 0;
+//
+//    mat-toolbar-row {
+//      line-height: normal;
+//      white-space: normal;
+//      align-items: flex-start;
+//
+//      mat-icon {
+//        margin-right: 16px;
+//      }
+//    }
+//
+//
+//    .notification_gap {
+//      flex-basis: 0;
+//    }
+//  }
+//
+//}
+//
+//mat-divider {
+//  margin-bottom: 8px;
+//}
+//
+//

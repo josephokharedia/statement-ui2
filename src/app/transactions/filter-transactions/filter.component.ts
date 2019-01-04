@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MatBottomSheet, MatBottomSheetRef, MatDialog} from '@angular/material';
 import {ManageCategoryDialogComponent} from '../../categories/manage-category/manage-category-dialog.component';
 import {CategoryService} from '../../categories/shared/category.service';
-import {NotificationService} from '../../shared/notification.service';
+import {NotificationService} from '../../notification/notification.service';
 import {switchMap} from 'rxjs/operators';
 import {RefreshService} from '../../shared/refresh.service';
 import {DeviceService} from '../../shared/device.service';
@@ -27,10 +27,10 @@ export class FilterComponent implements OnInit, OnDestroy {
   endDate = new EventEmitter<Date>();
 
   @Output()
-  categories = new EventEmitter<String[]>();
+  categories = new EventEmitter<string[]>();
 
   @Output()
-  institutions = new EventEmitter<String[]>();
+  institutions = new EventEmitter<string[]>();
 
   categories$: Observable<Category[]>;
   institutions$: Observable<string[]>;

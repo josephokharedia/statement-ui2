@@ -1,0 +1,10 @@
+main {
+  display: flex;
+  /*height: 100vh;*/
+  margin: 8px;
+
+  &.border {
+    border: 1px solid rgba(0, 0, 0, .12);
+    border-radius: 2px;
+  }
+}

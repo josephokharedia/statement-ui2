@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+@import "variables";
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Roboto Condensed", Roboto, "Helvetica Neue", sans-serif;
+  /*letter-spacing: -0.03em;*/
+}
+
+.app-fill {
+  flex: 1 1 auto;
+}
+
+.app-margin-left-16 {
+  margin-left: 16px;
+}
+
+.app-margin-right-16 {
+  margin-right: 16px;
+}
+
+
+.app-panel {
+  display: flex;
+  margin: auto;
+  flex-flow: column;
+  align-content: flex-start;
+  background: $card;
+  padding: 16px;
+}
+
+.app-panel.handsetDevice {
+  padding: 0;
+}
+
+
+mat-form-field {
+  &.app-header-form-field {
+    .mat-form-field-wrapper {
+      //padding: 5px;
+      font-size: 14px;
+    }
+  }
+}
+
+mat-tab-group {
+  &.app-toolbar-mat-tab-group {
+    & > mat-tab-header {
+      background: $appbar;
+      position: sticky;
+      top: 56px;
+      z-index: 2;
+      @include mat-elevation(1);
+
+      .mat-tab-label {
+        font-size: 14px;
+        //font-weight: bold;
+      }
+    }
+  }
+}

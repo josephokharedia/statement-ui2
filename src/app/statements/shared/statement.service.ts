@@ -1,32 +1,44 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {Statement, StatementDetails} from '../../shared/shared.model';
-import {tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {StatementDetailsTo, StatementDraftTo, StatementTo} from '../../shared/shared.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatementService {
 
-  private statementsSubject = new BehaviorSubject([]);
-  private statements$ = this.statementsSubject.asObservable();
-
   constructor(private http: HttpClient) {
   }
 
   retrieveDetails(statementId: string) {
-    return this.http.get<StatementDetails>(`/api/statements/${statementId}`);
+    return this.http.get<StatementDetailsTo>(`/api/statements/${statementId}`);
   }
 
-  retrieve(): Observable<Statement[]> {
-    this._refresh().subscribe();
-    return this.statements$;
+  retrieve(): Observable<StatementTo[]> {
+    return this.http.get<StatementTo[]>('/api/statements');
   }
 
-  private _refresh(): Observable<Statement[]> {
-    return this.http.get<Statement[]>('/api/statements')
-      .pipe(tap(v => this.statementsSubject.next(v)));
+  retrieveDrafts(): Observable<StatementDraftTo[]> {
+    return this.http.get<StatementDraftTo[]>('/api/draft');
   }
 
+  retrieveDraftDetails(draftId: string): Observable<StatementDraftTo> {
+    return this.http.get<StatementDraftTo>(`/api/draft/${draftId}`);
+  }
+
+  approveDraft(draftId: string): Observable<StatementTo> {
+    return this.http.post<StatementTo>(`/api/draft/approve/${draftId}`, null);
+  }
+
+  deleteDraft(draftId: string): Observable<string> {
+    return this.http.delete<string>(`/api/draft/${draftId}`);
+  }
+
+  createDraft(institution: string, file: File): Observable<StatementDraftTo> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('institution', institution);
+    return this.http.post<StatementDraftTo>(`/api/draft/`, formData);
+  }
 }

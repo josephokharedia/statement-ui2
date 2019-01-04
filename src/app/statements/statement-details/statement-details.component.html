@@ -5,6 +5,7 @@
         <mat-icon>expand_more</mat-icon>
       </button>
       <span>{{'statements.statementDetails.statementDetails' | translate | uppercase}}</span>
+      <span class="app-fill"></span>
     </div>
     <mat-divider></mat-divider>
   </header>
@@ -33,7 +34,7 @@
     </article>
     <article>
       <span class="mat-subheading-2">{{'statements.statementDetails.totalTrans' | translate}}</span>
-      <span class="mat-subheading-2"><b>{{statementDetails.transactions.data.length}}</b></span>
+      <span class="mat-subheading-2"><b>{{statementDetails.transactionGroups.data.length}}</b></span>
     </article>
 
     <article>
@@ -57,7 +58,7 @@
   </section>
 
   <section>
-    <mat-tab-group>
+    <mat-tab-group backgroundColor="" color="">
       <mat-tab [label]="'statements.statementDetails.debits' | translate">
         <ng-template matTabContent>
           <canvas baseChart width="400" height="220"

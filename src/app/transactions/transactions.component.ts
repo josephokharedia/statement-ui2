@@ -1,16 +1,16 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {BehaviorSubject, Subject} from 'rxjs';
+import {debounceTime, distinctUntilChanged, takeUntil, tap} from 'rxjs/operators';
 import {TransactionsDatasource} from './shared/transactions-datasource';
 import {TransactionsService} from './shared/transactions.service';
-import {MatBottomSheet, MatPaginator, MatSort} from '@angular/material';
+import {MatBottomSheet, MatDrawer, MatPaginator, MatSort} from '@angular/material';
 import {Category} from '../shared/shared.model';
-import {NotificationService} from '../shared/notification.service';
+import {NotificationService} from '../notification/notification.service';
 import {FilterComponent} from './filter-transactions/filter.component';
 import {DeviceService} from '../shared/device.service';
 
 @Component({
-  selector: 'e-transactions',
+  selector: 'app-transactions',
   templateUrl: './transactions.component.html',
   styleUrls: ['./transactions.component.scss']
 })
@@ -19,6 +19,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
   startDate: Date;
   endDate: Date = new Date();
   categories: string[] = [];
+  institutions: string[] = [];
 
   readonly displayedColumns: string[] = ['date', 'description', 'amount', 'balance', 'star'];
   @ViewChild('filter', {read: ElementRef})
@@ -28,11 +29,18 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
   paginator: MatPaginator;
   @ViewChild(MatSort)
   sort: MatSort;
+  @ViewChild(MatDrawer)
+  drawer: MatDrawer;
+  showSearchBar = false;
+  destroy$ = new Subject<boolean>();
+  private searchTerm$ = new BehaviorSubject<string>('');
+  editMode = false;
 
   constructor(private transactionsService: TransactionsService,
               private notificationService: NotificationService,
               private bottomSheet: MatBottomSheet,
-              private device: DeviceService) {
+              private device: DeviceService,
+              private renderer: Renderer2) {
   }
 
   ngOnInit() {
@@ -41,8 +49,9 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    fromEvent(this.filter.nativeElement, 'keyup')
+    this.searchTerm$
       .pipe(
+        takeUntil(this.destroy$),
         debounceTime(400),
         distinctUntilChanged(),
         tap(() => {
@@ -51,17 +60,26 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       ).subscribe();
 
+
     this.paginator.page
-      .pipe(tap(() => this.getTransactions()))
+      .pipe(takeUntil(this.destroy$), tap(() => this.getTransactions()))
       .subscribe();
 
     this.sort.sortChange
-      .pipe(tap(() => {
+      .pipe(takeUntil(this.destroy$), tap(() => {
         this.paginator.pageIndex = 0;
         this.getTransactions();
       })).subscribe();
 
     this.getTransactions();
+  }
+
+  get searchTerm(): string {
+    return this.searchTerm$.getValue();
+  }
+
+  set searchTerm(term: string) {
+    this.searchTerm$.next(term);
   }
 
   setStartDate(date: Date) {
@@ -82,12 +100,18 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getTransactions();
   }
 
+  setInstitutions(institutions: string[]) {
+    this.institutions = institutions;
+    this.paginator.pageIndex = 0;
+    this.getTransactions();
+  }
+
   getTransactions() {
     const sortField = `${this.sort.active}`;
     const sortDirection = `${this.sort.direction}`;
 
     this.dataSource.getTransactions(
-      this.filter.nativeElement.value, this.categories, this.startDate, this.endDate,
+      this.searchTerm$.getValue(), this.categories, this.institutions, this.startDate, this.endDate,
       sortField, sortDirection, this.paginator.pageIndex, this.paginator.pageSize);
   }
 
@@ -99,25 +123,35 @@ export class TransactionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   trackByCategory(idx, itm: Category) {
-    return itm._id;
+    return itm.id;
+  }
+
+  closeSearchToolbar() {
+    this.searchTerm = '';
+    this.showSearchBar = false;
   }
 
   openFilterDialog() {
-    const bottomSheetRef = this.bottomSheet.open(FilterComponent);
-    bottomSheetRef.instance.startDate.subscribe(startDate => {
-      this.setStartDate(startDate);
-    });
-    bottomSheetRef.instance.endDate.subscribe(endDate => {
-      this.setEndDate(endDate);
-    });
-    bottomSheetRef.instance.categories.subscribe(categories => {
-      this.setCategories(categories);
-    });
-    // bottomSheetRef.instance.institutions.subscribe(institutions => {
-    // this.setInstitutions(institutions);
-    // });
+    if (this.device.isHandset) {
+      const bottomSheetRef = this.bottomSheet.open(FilterComponent);
+      bottomSheetRef.instance.startDate.pipe(takeUntil(this.destroy$)).subscribe(startDate => {
+        this.setStartDate(startDate);
+      });
+      bottomSheetRef.instance.endDate.pipe(takeUntil(this.destroy$)).subscribe(endDate => {
+        this.setEndDate(endDate);
+      });
+      bottomSheetRef.instance.categories.pipe(takeUntil(this.destroy$)).subscribe(categories => {
+        this.setCategories(categories);
+      });
+      bottomSheetRef.instance.institutions.pipe(takeUntil(this.destroy$)).subscribe(institutions => {
+      this.setInstitutions(institutions);
+      });
+    } else {
+      this.drawer.toggle();
+    }
   }
 
   ngOnDestroy() {
+    this.destroy$.next(true);
   }
 }

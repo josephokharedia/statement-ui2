@@ -1,76 +1,35 @@
 <ng-progress color="#673ab7"></ng-progress>
-<mat-sidenav-container class="main-container">
-  <mat-sidenav #sidenav [opened]="opened" [mode]="mode" [class.over]="mode === 'over'" [class.side]="mode === 'side'"
-               class="mat-elevation-z2">
+<mat-sidenav-container appSidenavContainer (mini)="miniSidenav = $event" autosize class="main-container">
+  <mat-sidenav class="mat-elevation-z2">
     <mat-toolbar>
       <mat-icon mat-list-icon>donut_large</mat-icon>
-      <!--<span class="title">{{title}}</span>-->
+      <span *ngIf="!miniSidenav" class="title">{{'sidenav.ekugcineni' | translate}}</span>
     </mat-toolbar>
-    <mat-nav-list (mouseenter)="mouseEnter($event)" (mouseleave)="mouseLeave($event)">
-      <!--<h3 mat-subheader>Action</h3>-->
-      <a routerLink="/dashboard" routerLinkActive="active">
-        <mat-list-item>
-          <mat-icon mat-list-icon>dashboard</mat-icon>
-          <!--<h4 mat-line>Dashboard</h4>-->
-          <!--<mat-hint mat-line>Dashboard</mat-hint>-->
-        </mat-list-item>
-      </a>
-      <!--<mat-divider></mat-divider>-->
+    <mat-nav-list>
       <a routerLink="/transactions" routerLinkActive="active">
         <mat-list-item>
           <mat-icon mat-list-icon>history</mat-icon>
-          <!--<h4 mat-line>Transactions</h4>-->
-          <!--<mat-hint mat-line>All Transactions</mat-hint>-->
+          <h4 *ngIf="!miniSidenav" mat-line>{{'sidenav.transactions' | translate}}</h4>
         </mat-list-item>
       </a>
-      <!--<mat-divider></mat-divider>-->
       <a routerLink="/statements" routerLinkActive="active">
         <mat-list-item>
           <mat-icon mat-list-icon>library_books</mat-icon>
-          <!--<h4 mat-line>Statements</h4>-->
-          <!--<mat-hint mat-line>CSV Statements</mat-hint>-->
+          <h4 *ngIf="!miniSidenav" mat-line>{{'sidenav.statements' | translate}}</h4>
         </mat-list-item>
       </a>
       <mat-divider></mat-divider>
-      <!--<h3 matSubheader>SETTINGS</h3>-->
+      <h3 *ngIf="!miniSidenav" matSubheader>{{'sidenav.settings' | translate}}</h3>
       <a routerLink="/categories" routerLinkActive="active">
         <mat-list-item>
           <mat-icon mat-list-icon>category</mat-icon>
-          <!--<h4 mat-line>Categories</h4>-->
-          <!--<mat-hint mat-line>Manage Categories</mat-hint>-->
+          <h4 *ngIf="!miniSidenav" mat-line>{{'sidenav.categories' | translate}}</h4>
         </mat-list-item>
       </a>
-      <!--<mat-divider></mat-divider>-->
-      <!--<h3 mat-subheader>Settings</h3>-->
-      <!--<mat-list-item>-->
-      <!--<mat-icon mat-list-icon>note</mat-icon>-->
-      <!--<h4 mat-line>Local Settings</h4>-->
-      <!--<mat-hint mat-line>settings</mat-hint>-->
-      <!--</mat-list-item>-->
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar class="mat-elevation-z1 fixed-header">
-      <button fxFlex="20%" mat-icon-button (click)="sidenav.toggle()" class="menu-button" *ngIf="mobileView$ | async">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <span fxFlex="50%">{{subtitle}}</span>
-      <!--<mat-form-field fxFlex="35%" appearance="standard" class="search" color="primary" fxFlexAlign="center">-->
-      <!--<input matInput placeholder="Search " [(ngModel)]="value">-->
-      <!--<button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">-->
-      <!--<mat-icon>close</mat-icon>-->
-      <!--</button>-->
-      <!--</mat-form-field>-->
-    </mat-toolbar>
-    <div class="content">
-      <ng-container *ngIf="error$ | async as error">
-        <mat-toolbar class="banner mat-elevation-z1" *ngIf="showError">
-          <mat-icon color="warn">error</mat-icon>
-          <span class="error-message" fxFlex="1 1 90%">{{error.message}}</span>
-          <button mat-button color="primary" (click)="closeError()">DISMISS</button>
-        </mat-toolbar>
-      </ng-container>
-      <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

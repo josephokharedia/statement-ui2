@@ -1,26 +1,53 @@
-<mat-drawer-container>
-  <mat-drawer #drawer
-              [mode]="device.isTablet? 'over':'side'"
-              [opened]="!device.isTablet && !device.isHandset" position="end"
-              class="mat-elevation-z1">
-    <app-filter (startDate)="setStartDate($event)" (endDate)="setEndDate($event)"
-                (categories)="setCategories($event)"></app-filter>
-  </mat-drawer>
-  <mat-drawer-content>
+<app-header>
+  <ng-container *ngIf="showSearchBar; then searchToolbar; else defaultToolbar"></ng-container>
 
-    <header>
-      <mat-toolbar color="white">
-        <mat-form-field color="primary">
-          <mat-label>{{'transactions.search' | translate}}</mat-label>
-          <input matInput [placeholder]="'transactions.searchByDescription' | translate" #filter type="search">
-        </mat-form-field>
-        <button *ngIf="device.isTablet" mat-icon-button (click)="drawer.toggle()">
+  <ng-template #defaultToolbar>
+    <mat-toolbar class="mat-elevation-z1">
+      <app-sidenav-toggle></app-sidenav-toggle>
+      <span>{{'transactions.transactions' | translate}}</span>
+      <span class="app-fill"></span>
+      <span *ngIf="!device.isWeb; else minSearchBox">
+        <button mat-icon-button (click)="showSearchBar = true">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button *ngIf="!device.isWeb" mat-icon-button (click)="openFilterDialog()">
           <mat-icon>tune</mat-icon>
         </button>
-      </mat-toolbar>
-    </header>
+      </span>
+      <ng-template #minSearchBox>
+        <mat-form-field floatLabel="never" class="transactions_toolbar_minSearchBox">
+          <mat-label>{{'transactions.searchByDescription' | translate}}</mat-label>
+          <input matInput [(ngModel)]="searchTerm">
+        </mat-form-field>
+      </ng-template>
+      <!--</ng-template>-->
+    </mat-toolbar>
+  </ng-template>
 
-    <main>
+  <ng-template #searchToolbar>
+    <mat-toolbar class="mat-elevation-z1 transactions_toolbar_fullSearchBox">
+      <button class="transactions_toolbar_fullSearchBox_backButton" mat-icon-button (click)="closeSearchToolbar()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <mat-form-field floatLabel="never" class="app-fill">
+        <mat-label>{{'transactions.searchByDescription' | translate}}</mat-label>
+        <input matInput matInput [(ngModel)]="searchTerm">
+      </mat-form-field>
+    </mat-toolbar>
+  </ng-template>
+
+</app-header>
+
+<app-main>
+  <mat-drawer-container class="app-fill">
+    <mat-drawer #drawer
+                [mode]="device.isTablet? 'over':'side'"
+                [opened]="device.isWeb" position="end"
+                class="mat-elevation-z1">
+      <app-filter (startDate)="setStartDate($event)" (endDate)="setEndDate($event)"
+                  (categories)="setCategories($event)" (institutions)="setInstitutions($event)"></app-filter>
+    </mat-drawer>
+    <mat-drawer-content>
       <table mat-table [dataSource]="dataSource" class="transactions_table mat-elevation-z0"
              matSort matSortActive="date" matSortDirection="asc" matSortDisableClear>
 
@@ -34,23 +61,31 @@
         <ng-container matColumnDef="description">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'transactions.description' | translate}}</th>
           <td mat-cell *matCellDef="let tx">
-            <div class="transactions_tableCellDescription">{{tx.description}}</div>
-            <div class="transactions_table_cellTags">
+            <!--<ng-container *ngIf="editMode; then transactionNonEditable; else transactionEditable"></ng-container>-->
+            <!--<ng-template #transactionNonEditable>-->
+            <span>{{tx.description}}</span>
+            <div class="transactions_table_cellTags" *ngIf="!editMode">
               <span [class]="normalizeStr(tx.statement.institution)">{{tx.statement.institution}}</span>
               <span *ngFor="let category of tx.categories; trackBy:trackByCategory">{{category}}</span>
             </div>
+            <!--</ng-template>-->
+            <!--<ng-template #transactionEditable>-->
+            <!--<mat-form-field>-->
+            <!--<input matInput [value]="tx.description">-->
+            <!--</mat-form-field>-->
+            <!--</ng-template>-->
           </td>
         </ng-container>
 
         <!-- Amount Column -->
         <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'transactions.amount' | translate}}</th>
           <td mat-cell *matCellDef="let tx">{{tx.amount}}</td>
         </ng-container>
 
         <!-- Balance Column -->
         <ng-container matColumnDef="balance">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Balance</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'transactions.balance' | translate}}</th>
           <td mat-cell *matCellDef="let tx">{{tx.balance}}</td>
         </ng-container>
 
@@ -65,24 +100,18 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-      <section class="transactions_noResultsFound" *ngIf="(dataSource.transactionSize$ | async) == 0">
-        <h3 matSubheader>No Results Found</h3>
+      <app-no-results *ngIf="(dataSource.transactionSize$ | async) == 0"
+                      [title]="'transactions.noResultsFoundTitle' | translate"
+                      [message]="'transactions.noResultsFoundMessage' | translate"
+                      [actionStyleRaised]="false"
+                      [actionText]="'transactions.clearAllFilters' | translate">
+      </app-no-results>
+      <section>
+        <mat-paginator [length]="(dataSource.transactionSize$ | async)"
+                       [pageSize]="25" [showFirstLastButtons]="true"
+                       [pageSizeOptions]="[25, 50, 100]">
+        </mat-paginator>
       </section>
-    </main>
-
-    <footer>
-      <mat-paginator [length]="(dataSource.transactionSize$ | async)"
-                     [pageSize]="25" [showFirstLastButtons]="true"
-                     [pageSizeOptions]="[25, 50, 100]">
-      </mat-paginator>
-    </footer>
-
-  </mat-drawer-content>
-</mat-drawer-container>
-
-<ng-container *ngIf="device.isHandset">
-  <button mat-fab class="transactions_filterButton" (click)="openFilterDialog()">
-    <mat-icon>tune</mat-icon>
-  </button>
-</ng-container>
-
+    </mat-drawer-content>
+  </mat-drawer-container>
+</app-main>

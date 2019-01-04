@@ -1,0 +1,38 @@
+<ng-container *ngIf="showError">
+  <div class="notification_box" appDeviceClass>
+    <div class="notification_box_message" *ngIf="isHttpError()">
+      <mat-icon color="primary">error</mat-icon>
+      <article>
+        <span class="notification_box_message_summary">{{'notification.httpError.message' | translate}}</span>
+        <span *ngIf="showDetails">{{'notification.httpError.timestamp' | translate}}: {{error.timestamp}}</span>
+        <span *ngIf="showDetails">{{'notification.httpError.url' | translate}}: {{error.url}}</span>
+        <span *ngIf="showDetails">{{'notification.httpError.statusCode' | translate}}: {{error.statusCode}}</span>
+        <span *ngIf="showDetails">{{'notification.httpError.statusText' | translate}}: {{error.statusText}}</span>
+      </article>
+    </div>
+    <div class="notification_box_message" *ngIf="isTechnicalError()">
+      <mat-icon color="primary">error</mat-icon>
+      <article>
+        <span class="notification_box_message_summary">{{'notification.technicalError.message' | translate}}</span>
+        <span *ngIf="showDetails">{{'notification.technicalError.timestamp' | translate}}: {{error.timestamp}}</span>
+        <span *ngIf="showDetails">{{'notification.technicalError.error' | translate}}: {{error.error}}</span>
+        <span *ngIf="showDetails">{{'notification.technicalError.possibleReason' | translate}}
+          : {{error.possibleReason}}</span>
+      </article>
+    </div>
+    <div class="notification_box_message" *ngIf="isOfflineError()">
+      <mat-icon color="primary">error</mat-icon>
+      <article>
+        <span class="notification_box_message_summary">{{'notification.offlineError.message' | translate}}</span>
+      </article>
+    </div>
+    <div class="notification_box_actionButtons">
+      <button mat-button color="primary" (click)="showError = false">DISMISS</button>
+      <button *ngIf="!isOfflineError()" mat-button color="primary" (click)="showDetails = !showDetails">
+        <span *ngIf="!showDetails">SHOW DETAILS</span>
+        <span *ngIf="showDetails">HIDE DETAILS</span>
+      </button>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+</ng-container>

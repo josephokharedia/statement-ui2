@@ -11,18 +11,33 @@ export class TransactionsService {
   constructor(private http: HttpClient) {
   }
 
-  retrieve(search: string, categoryIds: string[] = [], fromDate: Date, toDate: Date, sortField: string,
+  retrieve(search: string, categoryIds: string[] = [], institutions: string[] = [], startDate: Date, endDate: Date, sortField: string,
            sortDirection: string, pageIndex = 0, pageSize = 10): Observable<TransactionResult> {
-    let httpParams = new HttpParams()
-      .set('search', search)
-      .set('startDate', `${fromDate}`)
-      .set('endDate', `${toDate}`)
-      .set('sortField', sortField)
-      .set('sortDirection', sortDirection)
-      .set('pageIndex', `${pageIndex}`)
-      .set('pageSize', `${pageSize}`);
+    let httpParams = new HttpParams();
 
+    if (search) {
+      httpParams = httpParams.append('search', search);
+    }
+    if (startDate) {
+      httpParams = httpParams.append('startDate', `${startDate}`);
+    }
+    if (endDate) {
+      httpParams = httpParams.append('endDate', `${endDate}`);
+    }
+    if (sortField) {
+      httpParams = httpParams.append('sortField', sortField);
+    }
+    if (sortDirection) {
+      httpParams = httpParams.append('sortDirection', sortDirection);
+    }
+    if (pageIndex) {
+      httpParams = httpParams.append('pageIndex', `${pageIndex}`);
+    }
+    if (pageSize) {
+      httpParams = httpParams.append('pageSize', `${pageSize}`);
+    }
     categoryIds.forEach(val => httpParams = httpParams.append('category', val));
+    institutions.forEach(val => httpParams = httpParams.append('institution', val));
     return this.http.get<TransactionResult>('/api/transactions', {
       params: httpParams
     });

@@ -3,7 +3,7 @@ import {Transaction, TransactionResult} from '../../shared/shared.model';
 import {CollectionViewer} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {TransactionsService} from './transactions.service';
-import {NotificationService} from '../../shared/notification.service';
+import {NotificationService} from '../../notification/notification.service';
 
 export class TransactionsDatasource extends DataSource<Transaction> {
 
@@ -13,7 +13,7 @@ export class TransactionsDatasource extends DataSource<Transaction> {
   transactionSize$ = this.transactionSizeSubject.asObservable();
   loading$ = this.loadingSubject.asObservable();
 
-  constructor(private service: TransactionsService,
+  constructor(private transactionsService: TransactionsService,
               private notificationService: NotificationService) {
     super();
   }
@@ -27,9 +27,9 @@ export class TransactionsDatasource extends DataSource<Transaction> {
     this.loadingSubject.complete();
   }
 
-  getTransactions(search, categoryIds, fromDate: Date, toDate: Date,
+  getTransactions(search, categoryIds, institutions, fromDate: Date, toDate: Date,
                   sortField: string, sortDirection: string, pageIndex = 0, pageSize = 10) {
-    return this.service.retrieve(search, categoryIds, fromDate, toDate,
+    return this.transactionsService.retrieve(search, categoryIds, institutions, fromDate, toDate,
       sortField, sortDirection, pageIndex, pageSize)
       .subscribe((transactionResult: TransactionResult) => {
         this.transactionSubject.next(transactionResult.data);
