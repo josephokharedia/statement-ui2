@@ -59,11 +59,12 @@ import {MainComponent} from './navigation/main.component';
 import {NewStatementComponent} from './statements/new-statement/new-statement.component';
 import {DraftComponent} from './statements/draft/draft.component';
 import {StatementDraftResolver} from './statements/new-statement/StatementDraftResolver';
-import { NoResultsComponent } from './shared/no-results/no-results.component';
-import { VarDirectiveDirective } from './shared/var-directive.directive';
+import {NoResultsComponent} from './shared/no-results/no-results.component';
+import {VarDirectiveDirective} from './shared/var-directive.directive';
 
 
 const appRoutes: Routes = [
+  {path: '', redirectTo: '/transactions', pathMatch: 'full'},
   {path: 'dashboard', component: DashboardComponent},
   {path: 'transactions', component: TransactionsComponent},
   {path: 'statements', component: StatementsComponent},
