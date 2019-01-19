@@ -6,12 +6,12 @@ import {MatBottomSheet, MatBottomSheetRef, MatDialog} from '@angular/material';
 import {ManageCategoryDialogComponent} from '../../categories/manage-category/manage-category-dialog.component';
 import {CategoryService} from '../../categories/shared/category.service';
 import {NotificationService} from '../../notification/notification.service';
-import {switchMap} from 'rxjs/operators';
+import {pluck, switchMap} from 'rxjs/operators';
 import {RefreshService} from '../../shared/refresh.service';
 import {DeviceService} from '../../shared/device.service';
-import {MasterDataService} from '../../shared/master-data.service';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
+import {InstitutionService} from '../../shared/institution.service';
 
 @Component({
   selector: 'app-filter',
@@ -44,7 +44,7 @@ export class FilterComponent implements OnInit, OnDestroy {
               private device: DeviceService,
               private bottomSheet: MatBottomSheet,
               private dialog: MatDialog,
-              private masterDataService: MasterDataService,
+              private institutionService: InstitutionService,
               private categoryService: CategoryService,
               private notificationService: NotificationService,
               private refreshService: RefreshService,
@@ -56,7 +56,7 @@ export class FilterComponent implements OnInit, OnDestroy {
     this.categories$ = this.refreshService.refresh$
       .pipe(switchMap(() => this.categoryService.retrieve()));
 
-    this.institutions$ = this.masterDataService.getInstitutions();
+    this.institutions$ = this.institutionService.retrieve().pipe(pluck('name'));
     this.filterForm = this.formBuilder.group({
       startDate: moment.utc('2018-01-01').toDate(),
       endDate: moment.utc().toDate(),

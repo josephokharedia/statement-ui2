@@ -2,13 +2,15 @@ import {Injectable} from '@angular/core';
 import {CategoriesTotal, TransactionResult} from '../../shared/shared.model';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {BackendService} from '../../shared/backend.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionsService {
+export class TransactionsService extends BackendService {
 
   constructor(private http: HttpClient) {
+    super();
   }
 
   retrieve(search: string, categoryIds: string[] = [], institutions: string[] = [], startDate: Date, endDate: Date, sortField: string,
@@ -38,7 +40,7 @@ export class TransactionsService {
     }
     categoryIds.forEach(val => httpParams = httpParams.append('category', val));
     institutions.forEach(val => httpParams = httpParams.append('institution', val));
-    return this.http.get<TransactionResult>('/api/transactions', {
+    return this.http.get<TransactionResult>(this.getUrl('/api/transactions'), {
       params: httpParams
     });
   }
@@ -46,16 +48,16 @@ export class TransactionsService {
   searchDescription(searchString: string): Observable<string[]> {
     const httpParams = new HttpParams()
       .set('q', searchString);
-    return this.http.get<string[]>(`/api/transactions/searchDescription/`, {
+    return this.http.get<string[]>(this.getUrl(`/api/transactions/searchDescription/`), {
       params: httpParams
     });
   }
 
   aggregateCategoriesForStatement(statemenId) {
-    return this.http.get<CategoriesTotal[]>(`/api/transactions/aggregateCategoriesForStatement/${statemenId}`);
+    return this.http.get<CategoriesTotal[]>(this.getUrl(`/api/transactions/aggregateCategoriesForStatement/${statemenId}`));
   }
 
   aggregateCategoriesForYear(year) {
-    return this.http.get<CategoriesTotal[]>(`/api/transactions/aggregateCategoriesForYear/${year}`);
+    return this.http.get<CategoriesTotal[]>(this.getUrl(`/api/transactions/aggregateCategoriesForYear/${year}`));
   }
 }

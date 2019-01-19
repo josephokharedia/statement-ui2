@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  margin: auto;
+  align-items: center;
+  height: 80vh;
+}
+
+.noResultsContainer {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  align-items: center;
+
+  p {
+    text-align: center;
+    width: 70%;
+  }
+
+  img {
+    width: 150px;
+    margin-bottom: 16px;
+  }
+}

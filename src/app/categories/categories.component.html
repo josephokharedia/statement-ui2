@@ -10,7 +10,7 @@
   </mat-toolbar>
 </app-header>
 <app-main [border]="false">
-  <section class="categories_content" *ngIf="categories?.length; else:noResultsFound">
+  <section class="categories_content" appDeviceClass *ngIf="categories?.length; else:noResultsFound">
     <mat-card *ngFor="let category of categories; trackBy:trackByFn">
       <mat-card-title>
         {{category.name}}

@@ -1,0 +1,170 @@
+mat-toolbar {
+  background: rgb(255, 255, 255);
+
+  .backButton {
+    color: rgb(95, 99, 104);
+  }
+}
+
+
+.chooseInstitution {
+  display: flex;
+  flex-flow: column;
+  cursor: pointer;
+
+  mat-divider {
+    padding-bottom: 8px;
+  }
+
+  mat-chip-list {
+    padding-bottom: 48px;
+
+    mat-chip {
+      cursor: pointer;
+    }
+  }
+}
+
+.chooseFile {
+  display: flex;
+  flex-flow: row wrap;
+
+  .app-fill {
+    flex: 1 1 100%;
+  }
+
+  mat-hint {
+    margin: 8px 0;
+  }
+
+  mat-form-field {
+    flex: 1 1 100%;
+  }
+}
+
+.upload {
+  margin: 16px 0;
+  flex: 1 1 auto;
+
+  button {
+    width: 100%;
+  }
+}
+
+.statementContainer {
+  display: flex;
+  flex-flow: column;
+  margin-bottom: 24px;
+
+  .accountAndStatementNumber {
+    display: flex;
+    justify-content: space-between;
+
+    .accountNumber {
+      display: flex;
+      flex-flow: row wrap;
+      //font-weight: bold;
+
+      & > :first-child {
+        padding-right: 8px;
+        font-weight: normal;
+      }
+    }
+
+    .statementNumber {
+      display: flex;
+      flex-flow: row wrap;
+      //font-weight: bold;
+
+      & > :first-child {
+        padding-right: 8px;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.transactionsContainer {
+  margin-bottom: 24px;
+
+  .header {
+    display: flex;
+    padding: 8px 0;
+    align-items: center;
+    font-size: 12px;
+  }
+
+  .transaction {
+    display: flex;
+    //border-right: 2px solid rgb(144, 238, 2);
+    box-sizing: border-box;
+    padding: 8px 0;
+
+
+    .amountAndBalance {
+      //font-size: 12px;
+    }
+
+    &.strikeThrough {
+      opacity: 0.5;
+      //text-decoration: line-through;
+      //border-color: rgb(255, 215, 64);
+    }
+  }
+
+  .date {
+    flex: 0 0 80px;
+    padding: 0 8px;
+  }
+
+  &.handsetDevice {
+    .date {
+      flex: 0 0 50px;
+    }
+  }
+
+  .description {
+    flex: 1 1 auto;
+    padding-right: 8px;
+    justify-content: flex-start;
+  }
+
+  .amountAndBalance {
+    display: flex;
+    flex-flow: column;
+    flex: 20%;
+    align-items: flex-end;
+    padding-right: 8px;
+  }
+}
+
+.saveButtonContainer {
+  display: flex;
+  flex-flow: column;
+}
+
+.strikeThrough {
+  text-decoration: line-through;
+}
+
+.tickContainer {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  text-align: center;
+
+  mat-icon {
+    margin: 48px 0;
+    font-size: 72px;
+  }
+}
+
+.doneButtonContainer {
+  display: flex;
+  margin: 16px 0;
+  flex: 1 1 auto;
+
+  a,button {
+    width: 100%;
+  }
+}

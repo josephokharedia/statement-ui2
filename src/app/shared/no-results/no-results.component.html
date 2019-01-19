@@ -1,0 +1,13 @@
+<section matTypography class="noResultsContainer">
+  <img [src]="'assets/no-results.png'" alt="no results"/>
+  <h1 class="mat-title">{{title}}</h1>
+  <p class="mat-hint mat-subheading-2">{{message}}</p>
+  <button *ngIf="showActionButton && actionStyleRaised" mat-raised-button color="primary"
+          (click)="raiseActionClickedEvent($event)">
+    {{actionText}}
+  </button>
+  <button *ngIf="showActionButton && !actionStyleRaised" mat-button color="primary"
+          (click)="raiseActionClickedEvent($event)">
+    {{actionText}}
+  </button>
+</section>

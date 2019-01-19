@@ -1,0 +1,149 @@
+<app-header>
+  <mat-toolbar class="mat-elevation-z1">
+    <button class="backButton" mat-icon-button (click)="back()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span>{{'statements.newStatement.statements' | translate}}</span>
+    <span class="app-fill"></span>
+    <button mat-button color="warn" *ngIf="editMode" (click)="openConfirmDeleteDialog()">
+      <mat-icon>delete</mat-icon>
+      <span>{{'statements.newStatement.deleteDraft' | translate}}</span>
+    </button>
+  </mat-toolbar>
+</app-header>
+
+<app-main [border]="false">
+  <section class="app-panel" appDeviceClass matTypography>
+    <mat-vertical-stepper #stepper linear>
+      <mat-step [formGroup]="step1FormGroup" [completed]="editMode" [editable]="false">
+        <ng-template matStepLabel>{{'statements.newStatement.uploadStatement' | translate}}</ng-template>
+        <section class="chooseInstitution">
+          <h1 class="mat-title">{{'statements.newStatement.chooseInstitution' | translate}}</h1>
+          <mat-chip-list formControlName="institution" [selectable]="!editMode">
+            <mat-chip [selected]="selectedInstitution === inst" (click)="selectedInstitution = inst"
+                      *ngFor="let inst of institutions$ | async" [value]="inst">
+              {{inst}}
+            </mat-chip>
+          </mat-chip-list>
+        </section>
+        <section class="chooseFile" *ngIf="institutionFormControl.valid">
+          <button mat-raised-button color="accent" (click)="fileInput.click()" [disabled]="editMode">
+            <mat-icon>attach_file</mat-icon>
+            {{'statements.newStatement.chooseFile' | translate}}
+          </button>
+          <span class="app-fill"></span>
+          <mat-hint>{{'statements.newStatement.onlyCsvAllowed' | translate}}</mat-hint>
+          <span class="app-fill"></span>
+          <input hidden accept="text/csv" type="file" #fileInput (change)="onFileChange($event)"/>
+          <mat-form-field *ngIf="fileFormControl.valid">
+            <input matInput disabled [value]="fileFormControl.value.name" required/>
+            <span matPrefix>
+              <mat-icon inline>insert_drive_file</mat-icon>
+            </span>
+            <span matSuffix>
+              <button mat-icon-button (click)="clearFile(); fileInput.value=''">
+                <mat-icon>close</mat-icon>
+              </button>
+            </span>
+          </mat-form-field>
+        </section>
+        <section class="upload">
+          <button mat-raised-button color="primary" *ngIf="!editMode" [disabled]="step1FormGroup.invalid"
+                  (click)="createDraft()">
+            {{'statements.newStatement.upload' | translate}}
+          </button>
+          <button mat-raised-button color="primary" *ngIf="editMode" (click)="stepper.next()">
+            {{'statements.newStatement.next' | translate}}
+          </button>
+        </section>
+      </mat-step>
+      <mat-step [completed]="doneMode" [editable]="false">
+        <ng-template matStepLabel>{{'statements.newStatement.saveStatement' | translate}}</ng-template>
+        <ng-container *ngIf="draft?.statement">
+          <section class="statementContainer">
+            <article>
+              <div class="description mat-title">{{draft.statement.accountDescription}}</div>
+              <div class="accountAndStatementNumber">
+                <div class="accountNumber">
+                  <span class="mat-hint">{{'statements.newStatement.account' | translate}}</span>
+                  <span>{{draft.statement.accountNumber}}</span>
+                </div>
+                <div class="statementNumber">
+                  <span class="mat-hint">{{'statements.newStatement.statement' | translate}}</span>
+                  <span>{{draft.statement.statementNumber}}</span>
+                </div>
+              </div>
+            </article>
+          </section>
+          <section class="transactionsContainer" appDeviceClass>
+            <mat-divider></mat-divider>
+            <section class="header mat-caption mat-hint">
+              <div class="date">{{'statements.newStatement.date' | translate}}</div>
+              <div class="description">{{'statements.newStatement.description' | translate}}</div>
+              <div class="amountAndBalance">
+                <span>{{'statements.newStatement.amount' | translate}}</span>
+                <span>{{'statements.newStatement.balance' | translate}}</span>
+              </div>
+            </section>
+            <mat-divider></mat-divider>
+            <ng-container *ngFor="let t of transactions">
+              <article class="transaction" [class.strikeThrough]="t.duplicate">
+                <div class="date">{{t.date | date:'yyyy-MM-dd'}}</div>
+                <div class="description">{{t.description}}</div>
+                <div class="amountAndBalance">
+                  <span class="amount">{{t.amount}}</span>
+                  <span class="balance">{{t.balance}}</span>
+                </div>
+              </article>
+              <mat-divider></mat-divider>
+            </ng-container>
+            <section class="saveButtonContainer">
+              <button mat-button color="primary" *ngIf="!showAllTransactions" (click)="showAllTransactions = true">
+                {{'statements.newStatement.showAllTransactions' | translate}}
+              </button>
+              <button mat-button color="primary" *ngIf="showAllTransactions" (click)="showAllTransactions = false">
+                {{'statements.newStatement.showLessTransactions' | translate}}
+              </button>
+              <button matStepperNext mat-raised-button color="primary" (click)="approveDraft()">
+                {{'statements.newStatement.save' | translate}}
+              </button>
+              <mat-hint class="mat-caption">
+                <mat-icon inline color="accent">error_outline</mat-icon>
+                <span class="strikeThrough">{{'statements.newStatement.strikeThrough' | translate}}</span>
+                {{'statements.newStatement.strikeThroughText' | translate}}
+              </mat-hint>
+            </section>
+          </section>
+        </ng-container>
+      </mat-step>
+      <mat-step [editable]="false">
+        <ng-template matStepLabel>{{'statements.newStatement.done' | translate}}</ng-template>
+        <div class="tickContainer">
+          <mat-icon inline="true" color="primary">check_circle</mat-icon>
+          <h3 class="mat-title">{{'statements.newStatement.successText' | translate}}</h3>
+        </div>
+        <section class="doneButtonContainer">
+          <button mat-raised-button color="primary" routerLink="/statements">
+            {{'statements.newStatement.finish' | translate}}
+          </button>
+        </section>
+      </mat-step>
+    </mat-vertical-stepper>
+
+  </section>
+</app-main>
+
+<ng-template #confirmDeleteTemplate>
+  <h1 mat-dialog-title>{{'statements.newStatement.deleteDraftTitle' | translate}}</h1>
+  <div mat-dialog-content>
+    <p>{{'statements.newStatement.deleteDraftText' | translate}}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false" cdkFocusInitial>
+      {{'statements.newStatement.dismiss' | translate}}
+    </button>
+    <button mat-button [mat-dialog-close]="true" color="primary">
+      {{'statements.newStatement.deleteDraftButtonText' | translate}}
+    </button>
+  </div>
+</ng-template>

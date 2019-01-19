@@ -1,0 +1,55 @@
+<main matTypography>
+  <section class="container" *ngIf="drafts.length; else:noResultsFound">
+    <article class="draftContainer mat-elevation-z1" appDeviceClass matRipple
+             *ngFor="let draft of drafts; trackBy: trackByFn" (click)="gotoDraft(draft)">
+      <div class="header mat-hint">
+        <span class="left">{{draft.statement.fromDate | date:'dd.MM.yyyy'}}
+          - {{draft.statement.toDate | date:'dd.MM.yyyy'}}</span>
+        <span class="app-fill"></span>
+        <span class="right">
+            <button mat-icon-button (click)="$event.stopPropagation(); openConfirmDeleteDialog(draft)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </span>
+      </div>
+      <div class="title">
+        <h1 class="mat-title">{{draft.statement.accountDescription}}</h1>
+        <span class="mat-hint">{{'statements.draft.statementNumber' | translate}} </span>
+        <span>{{draft.statement.statementNumber}}</span>
+      </div>
+      <div class="body mat-subheading-2">
+          <span>
+            <span>{{draft.transactions.length}} </span>
+            <span class="mat-hint">{{'statements.draft.transactions' | translate}}</span>
+          </span>
+        <span>
+            <span>{{countDuplicates(draft.transactions)}} </span>
+            <span class="mat-hint">{{'statements.draft.duplicates' | translate}}</span>
+          </span>
+      </div>
+    </article>
+  </section>
+</main>
+
+<ng-template #confirmDeleteTemplate>
+  <h1 mat-dialog-title>{{'statements.draft.deleteDraftTitle' | translate}}</h1>
+  <div mat-dialog-content>
+    <p>{{'statements.draft.deleteDraftText' | translate}}</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="false" cdkFocusInitial>
+      {{'statements.draft.dismiss' | translate}}
+    </button>
+    <button mat-button [mat-dialog-close]="true" color="primary">
+      {{'statements.draft.deleteDraftButtonText' | translate}}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #noResultsFound>
+  <app-no-results [title]="'statements.draft.noResultsFoundTitle' | translate"
+                  [message]="'statements.draft.noResultsFoundMessage' | translate"
+                  [actionText]="'statements.draft.createStatement' | translate"
+                  (actionClicked)="gotoNewStatement()">
+  </app-no-results>
+</ng-template>

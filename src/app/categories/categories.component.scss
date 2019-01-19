@@ -3,7 +3,10 @@
   flex-flow: row wrap;
   overflow: auto;
   align-items: flex-start;
-  justify-content: center;
+
+  &.handsetDevice {
+    justify-content: center;
+  }
 
   mat-card {
     width: 250px;
